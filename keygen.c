@@ -19,11 +19,11 @@ int main(int argc, char** argv) {
 
     uint64 p, q, g;
     gen_params(&p, &q, &g);
-    printf("p = %lu, q = %lu, g = %lu\n", p, q, g);
+    //printf("p = %lu, q = %lu, g = %lu\n", p, q, g);
 
     uint64 pk, sk;
     gen_keys(p, q, g, &pk, &sk);
-    printf("pk = %lu, sk = %lu\n", pk, sk);
+    //printf("pk = %lu, sk = %lu\n", pk, sk);
 
     int len = strlen(name);
     char pk_fname[len + 5];
@@ -31,12 +31,14 @@ int main(int argc, char** argv) {
     strcat(pk_fname+len, ".pub");
     pk_fname[len+4] = '\0';
     key_to_file(p, q, g, pk, pk_fname);
+    printf("Generated public key -> %s\n", pk_fname);
 
     char sk_fname[strlen(name) + 5];
     strcpy(sk_fname, name);
     strcat(sk_fname, ".sec");
     sk_fname[len+4] = '\0';
     key_to_file(p, q, g, sk, sk_fname);
+    printf("Generated secret key -> %s\n", sk_fname);
 }
 
 void gen_keys(uint64 p, uint64 q, uint64 g, uint64* pk, uint64* sk) {
@@ -62,8 +64,8 @@ void gen_params(uint64* p, uint64* q, uint64* g) {
         *p = pm1+1;
         break;
     }
-    PRINT64(*q);
-    PRINT64(*p);
+    //PRINT64(*q);
+    //PRINT64(*p);
 
     // in the rare case that *g == 1, try again with a different h
     do {
@@ -71,13 +73,13 @@ void gen_params(uint64* p, uint64* q, uint64* g) {
         // choose h randomly from [2, p-2]
         //uint64 h = (rand_u64() % (*p-3)) + 2;
         uint64 h = 3;
-        PRINT64(h);
+        //PRINT64(h);
 
         // compute g
         *g = modpow(h, (*p-1) / *q, *p);
     } while (*g == 1);
 
-    PRINT64(*g);
+    //PRINT64(*g);
 }
 
 // writes 64-bit key to file
